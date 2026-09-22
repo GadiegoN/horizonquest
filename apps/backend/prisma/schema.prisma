@@ -1,0 +1,217 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("user")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  guildProfile          GuildProfile?
+  createdQuestTemplates QuestTemplate[] @relation("QuestTemplateCreator")
+  reviewedQuests        QuestInstance[] @relation("QuestReviewer")
+}
+
+model GuildProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  adventurerName String
+  classId        String?
+  currentXp      Int      @default(0)
+  rank           String   @default("D")
+  avatarUrl      String?
+  bio            String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id])
+  class Class? @relation(fields: [classId], references: [id])
+
+  quests         QuestInstance[]
+  xpTransactions XpTransaction[]
+  achievements   UserAchievement[]
+  bugFixes       BugFixLog[]
+  projectsOwned  Project[]         @relation("ProjectsOwned")
+  projectMembers ProjectMember[]
+  journalEntries JournalEntry[]
+  tavernMessages TavernMessage[]
+  activities     ActivityLog[]
+}
+
+model Class {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  members GuildProfile[]
+}
+
+model QuestTemplate {
+  id              String   @id @default(cuid())
+  title           String
+  description     String
+  type            String
+  baseXpReward    Int      @default(10)
+  difficulty      String
+  isActive        Boolean  @default(true)
+  createdByUserId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  createdBy User            @relation("QuestTemplateCreator", fields: [createdByUserId], references: [id])
+  instances QuestInstance[]
+}
+
+model QuestInstance {
+  id              String    @id @default(cuid())
+  questTemplateId String
+  guildProfileId  String
+  status          String    @default("pending")
+  startedAt       DateTime?
+  submittedAt     DateTime?
+  completedAt     DateTime?
+  reviewerId      String?
+  reviewComment   String?
+
+  questTemplate QuestTemplate          @relation(fields: [questTemplateId], references: [id])
+  guildProfile  GuildProfile           @relation(fields: [guildProfileId], references: [id])
+  reviewer      User?                  @relation("QuestReviewer", fields: [reviewerId], references: [id])
+  submission    QuestSubmissionDetail?
+
+  @@index([guildProfileId])
+  @@index([questTemplateId])
+}
+
+model QuestSubmissionDetail {
+  id              String  @id @default(cuid())
+  questInstanceId String  @unique
+  repoUrl         String?
+  liveDemoUrl     String?
+  notes           String?
+
+  questInstance QuestInstance @relation(fields: [questInstanceId], references: [id])
+}
+
+model XpTransaction {
+  id             String   @id @default(cuid())
+  guildProfileId String
+  amount         Int
+  reason         String
+  meta           Json?
+  createdAt      DateTime @default(now())
+
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id])
+
+  @@index([guildProfileId])
+}
+
+model Achievement {
+  id            String  @id @default(cuid())
+  code          String  @unique
+  name          String
+  description   String
+  icon          String?
+  conditionType String
+
+  users UserAchievement[]
+}
+
+model UserAchievement {
+  id             String   @id @default(cuid())
+  guildProfileId String
+  achievementId  String
+  unlockedAt     DateTime @default(now())
+
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id])
+  achievement  Achievement  @relation(fields: [achievementId], references: [id])
+
+  @@unique([guildProfileId, achievementId])
+}
+
+model BugFixLog {
+  id               String   @id @default(cuid())
+  guildProfileId   String
+  description      String
+  relatedProjectId String?
+  createdAt        DateTime @default(now())
+
+  guildProfile   GuildProfile @relation(fields: [guildProfileId], references: [id])
+  relatedProject Project?     @relation(fields: [relatedProjectId], references: [id])
+}
+
+model Project {
+  id                      String  @id @default(cuid())
+  name                    String
+  description             String
+  repoUrl                 String?
+  status                  String  @default("idea")
+  createdByGuildProfileId String
+
+  createdBy GuildProfile    @relation("ProjectsOwned", fields: [createdByGuildProfileId], references: [id])
+  members   ProjectMember[]
+  bugFixes  BugFixLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProjectMember {
+  id             String   @id @default(cuid())
+  projectId      String
+  guildProfileId String
+  role           String   @default("contributor")
+  joinedAt       DateTime @default(now())
+
+  project      Project      @relation(fields: [projectId], references: [id])
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id])
+
+  @@unique([projectId, guildProfileId])
+}
+
+model JournalEntry {
+  id             String    @id @default(cuid())
+  guildProfileId String
+  title          String
+  content        String
+  weekReference  DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id])
+
+  @@index([guildProfileId])
+}
+
+model TavernMessage {
+  id               String   @id @default(cuid())
+  guildProfileId   String
+  content          String
+  replyToMessageId String?
+  createdAt        DateTime @default(now())
+
+  guildProfile GuildProfile    @relation(fields: [guildProfileId], references: [id])
+  replyTo      TavernMessage?  @relation("MessageReplies", fields: [replyToMessageId], references: [id])
+  replies      TavernMessage[] @relation("MessageReplies")
+
+  @@index([createdAt])
+}
+
+model ActivityLog {
+  id             String   @id @default(cuid())
+  guildProfileId String
+  type           String
+  meta           Json?
+  createdAt      DateTime @default(now())
+
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id])
+
+  @@index([guildProfileId])
+  @@index([type])
+}
