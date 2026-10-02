@@ -36,9 +36,14 @@ Variáveis do serviço:
 | --- | --- |
 | `NODE_VERSION` | `24.14.0` (versão usada na validação local) |
 | `NODE_ENV` | `production` |
-| `DATABASE_URL` | Connection string do Neon |
+| `DATABASE_URL` | Connection string direta do Neon (sem `-pooler` no host) |
+| `DIRECT_URL` | (Opcional) URL direta caso a `DATABASE_URL` use `-pooler` |
 | `JWT_SECRET` | Um segredo aleatório longo, exclusivo desse ambiente |
 | `JWT_EXPIRES_IN` | `7d` |
+
+> **Aviso Neon & Migrations:** O Neon fornece duas URLs: uma com connection pooling (`-pooler` no domínio) e uma direta (sem `-pooler`). Como o pooler funciona em modo de transação, ele não aceita `pg_advisory_lock` e pode travar o comando `prisma migrate deploy` com o erro `P1002`. Use a URL direta (sem `-pooler`) em `DATABASE_URL` no Render, ou forneça-a em `DIRECT_URL`.
+> Se o banco já estiver atualizado localmente, você também pode usar no Start Command apenas:
+> `pnpm --filter @horizon/backend start`
 
 Não fixe `PORT`: use a porta fornecida pelo Render. Configure os segredos apenas no painel, nunca no repositório.
 
