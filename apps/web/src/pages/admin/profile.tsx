@@ -1,8 +1,10 @@
 import { ErrorState, LoadingState } from "../../components/page-state";
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import { api } from "../../lib/api";
 import { useAuth } from "../../hooks/use-auth";
 import { useToast } from "../../context/toast-context";
+import { Icon } from "../../components/brand";
 
 type ClassItem = { id: string; name: string; description?: string | null };
 
@@ -95,10 +97,10 @@ export default function ProfilePage() {
   return (
     <div className="max-w-5xl space-y-8">
       {error && <ErrorState message={error} />}
-      <div className="relative overflow-hidden rounded-2xl border border-neutral-800 bg-linear-to-br from-blue-950 via-neutral-900 to-neutral-950 p-5 sm:p-8">
+      <div className={`relative overflow-hidden rounded-2xl border border-neutral-800 p-5 sm:p-8 card-theme ${profile.equippedTheme ?? "bg-linear-to-br from-blue-950 via-neutral-900 to-neutral-950"}`}>
         <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-blue-600/10 blur-3xl" />
         <div className="relative flex flex-col gap-6 md:flex-row md:items-center">
-          <div className="h-28 w-28 shrink-0 overflow-hidden rounded-2xl border-2 border-blue-500/50 bg-neutral-800 flex items-center justify-center text-4xl font-bold text-blue-300">
+          <div className={`h-28 w-28 shrink-0 overflow-hidden rounded-2xl border-2 border-blue-500/50 bg-neutral-800 flex items-center justify-center text-4xl font-bold text-blue-300 avatar-frame ${profile.equippedFrame ?? ""}`}>
             {profile.avatarUrl ? (
               <img
                 src={profile.avatarUrl}
@@ -109,14 +111,29 @@ export default function ProfilePage() {
               profile.adventurerName[0]?.toUpperCase()
             )}
           </div>
-          <div className="flex-1">
-            <p className="text-sm uppercase tracking-[0.2em] text-blue-300">
-              Ficha de aventureiro
-            </p>
-            <h1 className="mt-2 text-3xl sm:text-4xl font-bold break-words">
+          <div className="flex-1 space-y-1">
+            <div className="flex items-center gap-3">
+              <p className="text-sm uppercase tracking-[0.2em] text-blue-300">
+                Ficha de aventureiro
+              </p>
+              <Link
+                to="/dashboard/shop"
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-semibold hover:bg-amber-500/25 transition-colors"
+                title="Visitar Loja da Guilda"
+              >
+                <Icon name="coin" className="w-3.5 h-3.5 text-amber-400" />
+                <span>{(profile.hqCoins ?? 0).toLocaleString("pt-BR")} HQ</span>
+              </Link>
+            </div>
+            <h1 className={`mt-2 text-3xl sm:text-4xl font-bold break-words ${profile.equippedBadge ? `badge-text ${profile.equippedBadge}` : ""}`}>
               {profile.adventurerName}
             </h1>
-            <p className="mt-2 text-neutral-400">
+            {profile.equippedTitle && (
+              <p className="text-sm font-medium text-amber-300/90 italic">
+                « {profile.equippedTitle} »
+              </p>
+            )}
+            <p className="mt-1 text-neutral-400 text-sm">
               {profile.className ?? "Sem classe definida"}
             </p>
           </div>

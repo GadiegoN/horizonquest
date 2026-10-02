@@ -102,7 +102,33 @@ button:disabled { cursor: not-allowed; opacity: .6; }
   .header-title { font-size: 13px; color: #e4edf2; }
   .xp-chip { font-size: 13px; font-variant-numeric: tabular-nums; color: #edbf6b; white-space: nowrap; }
   .xp-chip small { font-size: 10px; color: #a7b7be; margin-left: 4px; }
+  .coin-chip { font-size: 13px; font-variant-numeric: tabular-nums; color: #fbbf24; white-space: nowrap; background: rgba(251, 191, 36, 0.12); border: 1px solid rgba(251, 191, 36, 0.35); padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease; }
+  .coin-chip:hover { background: rgba(251, 191, 36, 0.22); border-color: rgba(251, 191, 36, 0.6); box-shadow: 0 0 12px rgba(251, 191, 36, 0.25); }
+  .coin-chip small { font-size: 10px; color: #fde68a; margin-left: 2px; }
   .rank-chip { display: grid; place-items: center; min-width: 34px; height: 34px; border: 1px solid #75603c; border-radius: 9px; color: #edbf6b; background: #28291f; font-weight: 700; font-size: 13px; }
+
+  /* Avatar Frames */
+  .player-avatar.frame-gold, .avatar-frame.frame-gold { border: 2.5px solid #edbf6b !important; box-shadow: 0 0 14px rgba(237, 191, 107, 0.7), inset 0 0 6px rgba(237, 191, 107, 0.35); }
+  .player-avatar.frame-fire, .avatar-frame.frame-fire { border: 2.5px solid #f97316 !important; box-shadow: 0 0 16px rgba(249, 115, 22, 0.8), inset 0 0 8px rgba(239, 68, 68, 0.45); animation: pulse-glow 2s infinite ease-in-out; }
+  .player-avatar.frame-cyber, .avatar-frame.frame-cyber { border: 2.5px solid #53d8ba !important; box-shadow: 0 0 16px rgba(83, 216, 186, 0.8), 0 0 6px #38bdf8; }
+  .player-avatar.frame-void, .avatar-frame.frame-void { border: 2.5px solid #c084fc !important; box-shadow: 0 0 18px rgba(192, 132, 252, 0.85), inset 0 0 8px rgba(147, 51, 234, 0.45); }
+
+  /* Name Badges */
+  .badge-text.badge-emerald { color: #53d8ba !important; text-shadow: 0 0 8px rgba(83, 216, 186, 0.45); }
+  .badge-text.badge-mystic { color: #c084fc !important; text-shadow: 0 0 8px rgba(192, 132, 252, 0.45); }
+  .badge-text.badge-legendary { color: #fbbf24 !important; text-shadow: 0 0 8px rgba(251, 191, 36, 0.55); font-weight: 700; }
+  .badge-text.badge-cyber { color: #38bdf8 !important; text-shadow: 0 0 8px rgba(56, 189, 248, 0.45); }
+
+  /* Card Themes */
+  .card-theme.theme-nebula { background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.25), transparent 70%), linear-gradient(135deg, #0b1528 0%, #09131c 100%) !important; border-color: rgba(99, 102, 241, 0.45) !important; }
+  .card-theme.theme-forge { background: radial-gradient(circle at top left, rgba(249, 115, 22, 0.22), transparent 70%), linear-gradient(135deg, #24120e 0%, #09131c 100%) !important; border-color: rgba(249, 115, 22, 0.45) !important; }
+  .card-theme.theme-aurora { background: radial-gradient(circle at center top, rgba(83, 216, 186, 0.25), rgba(56, 189, 248, 0.15), transparent 75%), linear-gradient(135deg, #081e26 0%, #09131c 100%) !important; border-color: rgba(83, 216, 186, 0.5) !important; }
+  .card-theme.theme-dawn { background: radial-gradient(circle at bottom right, rgba(237, 191, 107, 0.22), transparent 70%), linear-gradient(135deg, #1f1b13 0%, #09131c 100%) !important; border-color: rgba(237, 191, 107, 0.45) !important; }
+
+  @keyframes pulse-glow {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.6)); }
+    50% { filter: drop-shadow(0 0 14px rgba(239, 68, 68, 0.9)); }
+  }
   .page-content { padding: clamp(20px, 3.2vw, 44px); width: 100%; max-width: 1536px; margin: 0 auto; flex: 1; min-width: 0; }
   .page-content > div { width: 100%; }
   .page-content .flex > div, .page-content .grid > * { min-width: 0; }

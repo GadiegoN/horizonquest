@@ -2,6 +2,7 @@ import ProjectsPage from "./pages/admin/projects";
 import ProjectDetailPage from "./pages/admin/project-detail";
 import JournalPage from "./pages/admin/journal";
 import TavernPage from "./pages/admin/tavern";
+import ShopPage from "./pages/admin/shop";
 import NotFoundPage from "./pages/not-found";
 import { createBrowserRouter, redirect } from "react-router";
 import Dashboard from "./pages/admin/dashboard";
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
       { path: "projects/:id", element: <ProjectDetailPage /> },
       { path: "journal", element: <JournalPage /> },
       { path: "tavern", element: <TavernPage /> },
+      { path: "shop", element: <ShopPage /> },
 
       { path: "quests", element: <QuestsPage /> },
       { path: "quests/my", element: <MyQuestsPage /> },

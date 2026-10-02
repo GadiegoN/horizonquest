@@ -7,6 +7,7 @@ import {
   HttpError,
   lockProfile,
   awardXp,
+  awardCoins,
   unlockAchievements,
   recordActivity,
 } from "../lib/workflow";
@@ -359,6 +360,9 @@ questsRouter.post(
           },
           include: { submission: true },
         });
+        const coinsGained = approved
+          ? Math.max(10, Math.floor(current.questTemplate.baseXpReward / 2))
+          : 0;
         const profile = approved
           ? await awardXp(
               tx,
@@ -368,6 +372,15 @@ questsRouter.post(
               meta,
             )
           : null;
+        if (approved && coinsGained > 0) {
+          await awardCoins(
+            tx,
+            current.guildProfileId,
+            coinsGained,
+            "quest_completed",
+            { ...meta, coins: coinsGained },
+          );
+        }
         await recordActivity(
           tx,
           current.guildProfileId,
@@ -380,7 +393,7 @@ questsRouter.post(
           targetProfileId: current.guildProfileId,
         });
         await unlockAchievements(tx, current.guildProfileId);
-        return { instance, xpGained, newXp: profile?.currentXp };
+        return { instance, xpGained, coinsGained, newXp: profile?.currentXp };
       },
       { timeout: 15000 },
     );

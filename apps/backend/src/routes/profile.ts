@@ -5,6 +5,7 @@ import {
   HttpError,
   lockProfile,
   awardXp,
+  awardCoins,
   unlockAchievements,
   recordActivity,
 } from "../lib/workflow";
@@ -49,6 +50,11 @@ profileRouter.get("/me", authMiddleware, async (req, res) => {
 
       avatarUrl: user.guildProfile?.avatarUrl,
       bio: user.guildProfile?.bio,
+      hqCoins: user.guildProfile?.hqCoins ?? 0,
+      equippedTitle: user.guildProfile?.equippedTitle ?? null,
+      equippedFrame: user.guildProfile?.equippedFrame ?? null,
+      equippedBadge: user.guildProfile?.equippedBadge ?? null,
+      equippedTheme: user.guildProfile?.equippedTheme ?? null,
       questsCompleted,
     },
   });
@@ -113,8 +119,10 @@ profileRouter.put("/update", authMiddleware, async (req, res) => {
       const wasComplete = !!old.classId && !!old.avatarUrl && !!old.bio;
       const xpGained =
         complete && !wasComplete && !alreadyRewarded && !achievement ? 30 : 0;
-      if (xpGained)
+      if (xpGained) {
         await awardXp(tx, profileId, xpGained, "profile_completed", {});
+        await awardCoins(tx, profileId, xpGained, "profile_completed", {});
+      }
       await recordActivity(
         tx,
         profileId,
@@ -240,6 +248,11 @@ profileRouter.get("/ranking", authMiddleware, async (_req, res) => {
       currentXp: true,
       rank: true,
       avatarUrl: true,
+      hqCoins: true,
+      equippedTitle: true,
+      equippedFrame: true,
+      equippedBadge: true,
+      equippedTheme: true,
       class: { select: { name: true } },
     },
     orderBy: [{ currentXp: "desc" }, { adventurerName: "asc" }, { id: "asc" }],

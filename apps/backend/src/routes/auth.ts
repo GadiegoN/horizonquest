@@ -33,6 +33,15 @@ authRouter.post("/register", async (req, res) => {
       guildProfile: {
         create: {
           adventurerName,
+          hqCoins: 100,
+          coinTransactions: {
+            create: {
+              amount: 100,
+              balanceAfter: 100,
+              reason: "initial_grant",
+              meta: { welcome: true },
+            },
+          },
         },
       },
     },

@@ -85,6 +85,29 @@ export async function awardXp(
   return updated;
 }
 
+export async function awardCoins(
+  tx: Prisma.TransactionClient,
+  profileId: string,
+  amount: number,
+  reason: string,
+  meta: Prisma.InputJsonObject = {},
+) {
+  const profile = await tx.guildProfile.update({
+    where: { id: profileId },
+    data: { hqCoins: { increment: amount } },
+  });
+  await tx.coinTransaction.create({
+    data: {
+      guildProfileId: profileId,
+      amount,
+      balanceAfter: profile.hqCoins,
+      reason,
+      meta,
+    },
+  });
+  return profile;
+}
+
 export async function auditMutation<T extends { id: string }>(
   profileId: string,
   actorId: string,

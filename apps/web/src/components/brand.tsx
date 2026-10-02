@@ -22,6 +22,11 @@ const paths = {
   menu: "M4 6h16M4 12h16M4 18h16",
   close: "m6 6 12 12M6 18 18 6",
   logout: "M9 3H4v18h5m5-14 5 5-5 5M9 12h12",
+  shop: "M3 9l2-5h14l2 5M3 9v11a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M3 9h18M9 13a3 3 0 0 0 6 0",
+  coin: "M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm0 5v10m-3-7h6a2 2 0 0 1 0 4H9a2 2 0 0 0 0 4h6",
+  sparkles: "m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Zm7 13 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3ZM5 16l.8 2.2L8 19l-2.2.8L5 22l-.8-2.2L2 19l2.2-.8L5 16Z",
+  check: "M20 6 9 17l-5-5",
+  gem: "M6 3h12l4 6-10 12L2 9l4-6Z",
 };
 export type IconName = keyof typeof paths;
 export function Icon({ name, className = "" }: { name: IconName; className?: string }) {

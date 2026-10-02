@@ -7,6 +7,7 @@ import { authRouter } from "./routes/auth";
 import { profileRouter } from "./routes/profile";
 import { questsRouter } from "./routes/quests";
 import { classesRouter } from "./routes/classes";
+import { shopRouter } from "./routes/shop";
 
 export const app = express();
 app.use((req, res, next) => {
@@ -23,6 +24,7 @@ app.use("/classes", classesRouter);
 app.use("/projects", projectsRouter);
 app.use("/journal", journalRouter);
 app.use("/tavern", tavernRouter);
+app.use("/shop", shopRouter);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

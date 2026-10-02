@@ -28,21 +28,28 @@ model GuildProfile {
   rank           String   @default("D")
   avatarUrl      String?
   bio            String?
+  hqCoins        Int      @default(100)
+  equippedTitle  String?
+  equippedFrame  String?
+  equippedBadge  String?
+  equippedTheme  String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   user  User   @relation(fields: [userId], references: [id])
   class Class? @relation(fields: [classId], references: [id])
 
-  quests         QuestInstance[]
-  xpTransactions XpTransaction[]
-  achievements   UserAchievement[]
-  bugFixes       BugFixLog[]
-  projectsOwned  Project[]         @relation("ProjectsOwned")
-  projectMembers ProjectMember[]
-  journalEntries JournalEntry[]
-  tavernMessages TavernMessage[]
-  activities     ActivityLog[]
+  quests           QuestInstance[]
+  xpTransactions   XpTransaction[]
+  achievements     UserAchievement[]
+  bugFixes         BugFixLog[]
+  projectsOwned    Project[]         @relation("ProjectsOwned")
+  projectMembers   ProjectMember[]
+  journalEntries   JournalEntry[]
+  tavernMessages   TavernMessage[]
+  activities       ActivityLog[]
+  cosmetics        UserCosmetic[]
+  coinTransactions CoinTransaction[]
 }
 
 model Class {
@@ -214,4 +221,48 @@ model ActivityLog {
 
   @@index([guildProfileId])
   @@index([type])
+}
+
+model ShopItem {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  description String
+  type        String
+  price       Int
+  icon        String?
+  rarity      String   @default("common")
+  config      Json?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  purchases UserCosmetic[]
+}
+
+model UserCosmetic {
+  id             String   @id @default(cuid())
+  guildProfileId String
+  shopItemId     String
+  acquiredAt     DateTime @default(now())
+
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id], onDelete: Cascade)
+  shopItem     ShopItem     @relation(fields: [shopItemId], references: [id], onDelete: Cascade)
+
+  @@unique([guildProfileId, shopItemId])
+  @@index([guildProfileId])
+  @@index([shopItemId])
+}
+
+model CoinTransaction {
+  id             String   @id @default(cuid())
+  guildProfileId String
+  amount         Int
+  balanceAfter   Int
+  reason         String
+  meta           Json?
+  createdAt      DateTime @default(now())
+
+  guildProfile GuildProfile @relation(fields: [guildProfileId], references: [id], onDelete: Cascade)
+
+  @@index([guildProfileId])
 }

@@ -17,6 +17,7 @@ const groups: { label: string; items: Item[] }[] = [
     { path: "projects", label: "Projetos", icon: "project" },
     { path: "journal", label: "Diário", icon: "book" },
     { path: "tavern", label: "Taverna", icon: "chat" },
+    { path: "shop", label: "Loja da Guilda", icon: "shop" },
     { path: "activity", label: "Histórico", icon: "history" },
   ] },
   { label: "GESTÃO DA GUILDA", items: [
@@ -55,13 +56,13 @@ export default function DashboardLayout() {
       const items = group.items.filter(item => !item.roles || item.roles.includes(user?.role ?? "user"));
       return items.length > 0 && <div key={group.label} className="nav-group"><p className="nav-label">{group.label}</p>{items.map(item => <NavLink key={item.path} end={item.path === "" || item.path === "quests"} to={`/dashboard${item.path ? `/${item.path}` : ""}`} onClick={() => setMenuOpen(false)} className={({ isActive }) => `nav-item ${isActive ? "is-active" : ""}`}><Icon name={item.icon} /><span>{item.label}</span></NavLink>)}</div>;
     })}</nav>
-    <div className="sidebar-footer"><Link className="player-link" to="/dashboard/profile" onClick={() => setMenuOpen(false)}><span className="player-avatar">{profile?.adventurerName?.slice(0, 1).toUpperCase() ?? "A"}</span><span className="player-name"><strong>{profile?.adventurerName}</strong><small>Rank {profile?.rank ?? "D"} · Meu perfil</small></span></Link><button className="icon-button" aria-label="Sair da conta" onClick={() => { setMenuOpen(false); logout(); }}><Icon name="logout" /></button></div>
+    <div className="sidebar-footer"><Link className="player-link" to="/dashboard/profile" onClick={() => setMenuOpen(false)}><span className={`player-avatar ${profile?.equippedFrame ?? ""}`}>{profile?.adventurerName?.slice(0, 1).toUpperCase() ?? "A"}</span><span className="player-name"><strong className={profile?.equippedBadge ? `badge-text ${profile.equippedBadge}` : ""}>{profile?.adventurerName}</strong><small>{profile?.equippedTitle ? `${profile.equippedTitle} · ` : ""}Rank {profile?.rank ?? "D"}</small></span></Link><button className="icon-button" aria-label="Sair da conta" onClick={() => { setMenuOpen(false); logout(); }}><Icon name="logout" /></button></div>
   </>;
   return <div className="app-shell">
     <a className="skip-link" href="#main-content">Pular para o conteúdo</a>
     <aside className="desktop-sidebar">{navigation}</aside>
     <dialog ref={drawer} className="mobile-drawer" aria-label="Menu da guilda" onCancel={() => setMenuOpen(false)} onClose={() => setMenuOpen(false)} onClick={event => { if (event.target === event.currentTarget) setMenuOpen(false); }}><div className="drawer-content"><button className="icon-button drawer-close" aria-label="Fechar menu" onClick={() => setMenuOpen(false)}><Icon name="close" /></button>{navigation}</div></dialog>
-    <div className="app-workspace"><header className="app-header"><div className="header-location"><button className="icon-button menu-toggle" aria-label="Abrir menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Icon name="menu" /></button><span className="header-guild">Guilda <span>/</span></span><span className="header-title">{pageTitle}</span></div><Link className="header-profile" to="/dashboard/profile"><span className="xp-chip">{(profile?.currentXp ?? 0).toLocaleString("pt-BR")} <small>XP</small></span><span className="rank-chip">{profile?.rank ?? "D"}</span><span className="sr-only">Ver meu perfil</span></Link></header>
+    <div className="app-workspace"><header className="app-header"><div className="header-location"><button className="icon-button menu-toggle" aria-label="Abrir menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Icon name="menu" /></button><span className="header-guild">Guilda <span>/</span></span><span className="header-title">{pageTitle}</span></div><Link className="header-profile" to="/dashboard/shop" title="Ver Loja e saldo de HQCoins"><span className="coin-chip"><Icon name="coin" className="w-3.5 h-3.5 inline mr-1 text-amber-400" />{(profile?.hqCoins ?? 0).toLocaleString("pt-BR")} <small>HQ</small></span><span className="xp-chip">{(profile?.currentXp ?? 0).toLocaleString("pt-BR")} <small>XP</small></span><span className="rank-chip">{profile?.rank ?? "D"}</span><span className="sr-only">Ir para Loja</span></Link></header>
     <main id="main-content" tabIndex={-1} className="page-content">{error && <ErrorState message={error} />}<Outlet /></main><footer className="app-footer"><span>HORIZONQUEST</span><span>Uma missão de cada vez.</span></footer></div>
   </div>;
 }

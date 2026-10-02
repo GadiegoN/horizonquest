@@ -31,6 +31,11 @@ export type User = {
     className?: string | null;
     avatarUrl?: string | null;
     bio?: string | null;
+    hqCoins?: number;
+    equippedTitle?: string | null;
+    equippedFrame?: string | null;
+    equippedBadge?: string | null;
+    equippedTheme?: string | null;
     stats?: Stats;
   };
 };

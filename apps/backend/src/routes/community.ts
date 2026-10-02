@@ -20,6 +20,10 @@ const author = {
   adventurerName: true,
   avatarUrl: true,
   rank: true,
+  equippedTitle: true,
+  equippedFrame: true,
+  equippedBadge: true,
+  equippedTheme: true,
 } as const;
 const projectStatus = z.enum(["idea", "active", "completed", "archived"]);
 const projectSchema = z.object({

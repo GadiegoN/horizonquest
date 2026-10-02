@@ -125,6 +125,25 @@ APIs autenticadas: `/projects`, `/journal` e `/tavern`, com `GET`, `POST`, `PUT 
 `pnpm test` executa também `community.test.ts`: CRUD, participação concorrente, permissões de equipe, privacidade do diário, busca/paginação, respostas e moderação da taverna. Os dados temporários dos testes são removidos ao terminar.
 
 
+## HQCoins e Loja da Guilda de Cosméticos
+
+A moeda **HQCoin** recompensa os aventureiros e permite personalizar sua presença na guilda com distinções cosméticas visíveis no perfil, na taverna e no ranking:
+
+- **Saldo Inicial**: Novos aventureiros recebem **100 HQCoins** ao criar a conta.
+- **Ganhos**: Conclusão do perfil (+30 HQCoins) e aprovação de quests (+50% do XP base em HQCoins, mínimo de 10 HQCoins).
+- **Auditabilidade**: Todas as movimentações geram registros imutáveis na tabela `CoinTransaction`.
+- **Rota no painel**: `/dashboard/shop` com:
+  - **Espelho da Guilda**: Pré-visualização ao vivo do cartão do aventureiro com tema, moldura de avatar, badge de cor e título antes de comprar ou equipar.
+  - **Categorias e Filtros**: Títulos de Honra, Molduras de Avatar, Cores/Badges de Nome, Temas do Cartão e Meus Itens Adquiridos.
+  - **Raridades**: Comum, Raro, Épico e Lendário ★.
+- **APIs autenticadas**:
+  - `GET /shop/items`: catálogo com status de aquisição e item equipado.
+  - `POST /shop/buy/:id`: compra com validação de saldo e prevenção de duplicatas.
+  - `POST /shop/equip`: equipar ou desequipar cosméticos por tipo.
+  - `GET /shop/inventory`: inventário pessoal de cosméticos.
+- **Cobertura de testes**: `shop.test.ts` valida concessão inicial, compras, bloqueio de saldo insuficiente, equipamentos de cosméticos e reflexo no ranking.
+
+
 ## Identidade visual
 
 A interface usa a identidade Midnight Atlas, com emblema próprio, tema azul-profundo/verde/dourado e layout adaptável a celulares, tablets e desktop. Regras de marca, componentes e breakpoints estão em [VISUAL_IDENTITY.md](./VISUAL_IDENTITY.md).
@@ -133,3 +152,4 @@ A interface usa a identidade Midnight Atlas, com emblema próprio, tema azul-pro
 ## Publicação gratuita
 
 Veja [DEPLOY.md](./DEPLOY.md) para publicar o frontend e a API no Render e usar PostgreSQL no Neon. O guia inclui comandos do monorepo, variáveis de ambiente e configuração das rotas da SPA.
+
